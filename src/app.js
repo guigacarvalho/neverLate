@@ -1,8 +1,13 @@
 var UI = require('ui');
 var ajax = require('ajax');
 var Vector2 = require('vector2');
-var mode;
 var apiKey = "AIzaSyCoi-dKJOepgdksk4ejP6xla6TW82ANtRk";
+var d = new Date();
+
+var modeSelected;
+var modeSelectedId;
+var destinationSelected;
+var destinationSelectedId;
 
 // API ENDPOINTS
  // Directions: https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&destination=Concord,MA&waypoints=Charlestown,MA|Lexington,MA&key=AIzaSyCoi-dKJOepgdksk4ejP6xla6TW82ANtRk
@@ -20,91 +25,30 @@ var main = new UI.Card({
   }
 });
 
-main.show();
-
 //Transit Mode Selection menu
-  var transitModeMenu = new UI.Menu({
-    sections: [{
-      items: [{
-        title: 'Walk',
-        icon: 'images/walk.png',
-        subtitle: ''
-      }, {
-        title: 'Public Transit',
-        subtitle: '',
-        icon: 'images/bus.png'
-      }, {
-        title: 'Driving',
-        subtitle: '',
-        icon: 'images/car.png'
-      }, {
-        title: 'Bike',
-        subtitle: '',
-        icon: 'images/bike.png'
-      }]
+var transitModeMenu = new UI.Menu({
+  sections: [{
+    items: [{
+      title: 'Walk',
+      icon: 'images/walk.png',
+      subtitle: ''
+    }, {
+      title: 'Public Transit',
+      subtitle: '',
+      icon: 'images/bus.png'
+    }, {
+      title: 'Driving',
+      subtitle: '',
+      icon: 'images/car.png'
+    }, {
+      title: 'Bike',
+      subtitle: '',
+      icon: 'images/bike.png'
     }]
-  });
-
-// Main menu events
-main.on('click', 'up', function(e) {
-
-  transitModeMenu.on('select', function(e) {
-    var d = new Date();
-    var h = d.getHours();
-    var m = d.getMinutes();
-    var t = h + " : " + m;
-    var selectClick = 0;
-    var wind = new UI.Window();
-    var textfield = new UI.Text({
-      position: new Vector2(0, 50),
-      size: new Vector2(144, 30),
-      font: 'Bitham 42 Light',
-      text: t,
-      textAlign: 'center'
-    });
-    var Vibe = require('ui/vibe');
-
-    Vibe.vibrate('short');
-    wind.on('click', 'up', function(e) {
-      if (selectClick === 0) {
-        h++;
-        t = h + " : " + m;
-        textfield.text(t);
-      } else {
-        m++;
-        t = h + " : " + m;
-        textfield.text(t);
-      }
-    });
-    wind.on('click', 'down', function(e) {
-      if (selectClick === 0) {
-        h--;
-        t = h + " : " + m;
-        textfield.text(t);
-      } else {
-        m--;
-        t = h + " : " + m;
-        textfield.text(t);
-      }
-          
-    });
-
-    wind.on('click', 'select', function(e) {
-      if (selectClick === 0) {
-        selectClick = 1;
-      }
-      else {
-        selectClick = 0;
-      }
-    });
-    wind.add(textfield);
-    wind.show();
-
-  });
-  transitModeMenu.show();
+  }]
 });
-  var routesMenu = new UI.Menu({
-    sections: [{
+var routesMenu = new UI.Menu({
+  sections: [{
     title: 'User defined',
       items: [{
         title: 'Home',
@@ -141,11 +85,99 @@ main.on('click', 'up', function(e) {
       }]
     }]
   });
+
+var transitModeMenuReset = transitModeMenu;
+
+var selectClick = 0;
+
+// Main menu events
+main.on('click', 'up', function(e) {
+  transitModeMenu.on('select', function(e) {
+    d = new Date();
+    var h = d.getHours();
+    var m = d.getMinutes();
+    var t = h + " : " + m;
+    var wind = new UI.Window();
+    var textfield = new UI.Text({
+      position: new Vector2(0, 50),
+      size: new Vector2(144, 30),
+      font: 'Bitham 42 Light',
+      text: t,
+      textAlign: 'center'
+    });
+    var Vibe = require('ui/vibe');
+    var evt = e;
+
+    Vibe.vibrate('short');
+    wind.on('click', 'up', function(e) {
+      if (selectClick === 0) {
+        if (h!==23)
+          h++;
+        else
+          h=0;
+        t = h + " : " + m;
+        textfield.text(t);
+      } else if (selectClick === 1){
+        if (m!==59)
+            m++;
+        else m=0;
+        t = h + " : " + m;
+        textfield.text(t);
+      }
+    });
+    wind.on('click', 'down', function(e) {
+      if (selectClick === 0) {
+        if (h!==0)
+          h--;
+        else
+          h=23;
+        t = h + " : " + m;
+        textfield.text(t);
+      } else if (selectClick === 1){
+        if (m!==0)
+          m--;
+        else m=59;
+        t = h + " : " + m;
+        textfield.text(t);
+      }       
+    });
+    wind.on('click', 'select', function(e) {
+      if (selectClick === 0) {
+        selectClick = 1;
+      } else if (selectClick === 2) {
+        // Reset menu and set * on the selected method
+        wind.hide();
+        routesMenu.show();
+        selectClick = 0;
+      } else if (selectClick === 1) {
+        selectClick = 2;
+        // transitModeMenu = transitModeMenuReset;
+        var items='';
+      for ( items in evt.menu.items(evt.section) )
+          if(evt.menu.item(evt.section, evt.item).title.slice(0,1) === "*") {
+            console.log(evt.menu.item(evt.section, evt.item).title);
+            evt.menu.item(evt.section, evt.item).title=
+              evt.menu.item(evt.section, evt.item).title.slice(
+                0,evt.menu.item(evt.section, evt.item).title.length);
+          }
+        
+        modeSelected = evt.menu.item(evt.section, evt.item).title;
+    //    modeSelectedId = evt.item;
+        console.log(modeSelected);
+        evt.menu.item(evt.section, evt.item, {title: "* "+modeSelected, 
+                                              subtitle: h+" : "+m, 
+                                              icon: evt.menu.item(evt.section, evt.item).icon});
+        // transitModeMenu.item(e.section, e.item).title("*"+transitModeMenu.item(e.section, e.item).title);
+        // selectClick = 2;
+      }            
+    });
+    wind.add(textfield);
+    wind.show();
+  });
+  transitModeMenu.show();
+});
 //main.on('click', 'select', function(e) {
 //});
-
-
-
 main.on('click', 'down', function(e) {
 /*  var card = new UI.Card({
     title: 'Hello World',
@@ -163,7 +195,7 @@ main.on('click', 'down', function(e) {
       console.log('Quote of the day is: ' + data.contents.quote);
     },
     function(jqXHR, textStatus, errorThrown) {
-      var output = '';
+        var output = '';
       console.log(textStatus);
       console.log(errorThrown);
       console.log(jqXHR);
@@ -343,7 +375,11 @@ main.on('click', 'down', function(e) {
       function(data) {
       console.log(data);
         address = data.results[0].formatted_address;
-        e.menu.item(e.section, e.item, {title:e.menu.item(e.section, e.item).title, subtitle: address, icon: e.menu.item(e.section, e.item).icon});        
+        e.menu.item(e.section, e.item, { 
+          title:e.menu.item(e.section, e.item).title, 
+          subtitle: address, 
+          icon: e.menu.item(e.section, e.item).icon
+        });        
         defineLocation.subtitle(address);
     });
       
@@ -362,12 +398,8 @@ main.on('click', 'down', function(e) {
   //wind.show();
 
   });
-routesMenu.show();
- // card.show();
-  
+routesMenu.show();  
 });
 
 
-
-
-
+main.show();

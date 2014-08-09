@@ -1,0 +1,117 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        "location",
+        "configurable"
+    ],
+    "companyName": "gcarvalho@scu.edu",
+    "longName": "neverLate - GPS aware reminders",
+    "projectType": "pebblejs",
+    "resources": {
+        "media": [
+            {
+                "file": "images/menu_icon.png",
+                "name": "IMAGE_MENU_ICON",
+                "type": "png"
+            },
+            {
+                "file": "images/logo_splash.png",
+                "name": "IMAGE_LOGO_SPLASH",
+                "type": "png"
+            },
+            {
+                "file": "images/tile_splash.png",
+                "name": "IMAGE_TILE_SPLASH",
+                "type": "png"
+            },
+            {
+                "file": "fonts/UbuntuMono-Regular.ttf",
+                "name": "MONO_FONT_14",
+                "type": "font"
+            },
+            {
+                "file": "images/custom1.png",
+                "name": "IMAGES_CUSTOM1_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/bar.png",
+                "name": "IMAGES_BAR_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/bank.png",
+                "name": "IMAGES_BANK_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/airport.png",
+                "name": "IMAGES_AIRPORT_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/nav_small.png",
+                "name": "IMAGES_NAV_SMALL_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/logo_small.png",
+                "menuIcon": true,
+                "name": "IMAGES_LOGO_SMALL_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/logo.png",
+                "name": "IMAGES_LOGO_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/nav.png",
+                "name": "IMAGES_NAV_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/pin.png",
+                "name": "IMAGES_PIN_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/bike.png",
+                "name": "IMAGES_BIKE_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/work.png",
+                "name": "IMAGES_WORK_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/home.png",
+                "name": "IMAGES_HOME_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/walk.png",
+                "name": "IMAGES_WALK_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/car.png",
+                "name": "IMAGES_CAR_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/bus.png",
+                "name": "IMAGES_BUS_PNG",
+                "type": "png"
+            }
+        ]
+    },
+    "shortName": "neverLate",
+    "uuid": "694ce22e-b067-4c45-9ceb-065b0f79f047",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
